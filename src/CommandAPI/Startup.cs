@@ -21,6 +21,7 @@ namespace CommandAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // 添加注入容器的数据库上下文对象
             services.AddDbContext<CommandContext>(option => option.UseNpgsql(
                 Configuration.GetConnectionString("PostgreSqlConnection")));
             // Registers services to enable the use of “Controllers” throughout
@@ -30,8 +31,9 @@ namespace CommandAPI
             // Controller (MVC) pattern is below.
             services.AddControllers();
 
-            // 添加要注入容器的服务，这里使用Scoped，是指一个request创造一个新的对象
-            services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
+            // 添加要注入容器的服务，这里使用Scoped，是指每来一个request就创造一个新的对象
+            // services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
+            services.AddScoped<ICommandAPIRepo, SqlCommandAPIRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
