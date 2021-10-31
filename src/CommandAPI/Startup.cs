@@ -1,3 +1,4 @@
+using CommandAPI.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +20,9 @@ namespace CommandAPI
             // services.AddMVC. Don’t worry; we cover what the Model–View–
             // Controller (MVC) pattern is below.
             services.AddControllers();
+
+            // 添加要注入容器的服务，这里使用Scoped，是指一个request创造一个新的对象
+            services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
