@@ -29,7 +29,7 @@ namespace CommandAPI.Controller
             var commandItem = _repository.GetCommandById(id);
             if (commandItem == null)
             {
-                return NotFound();
+                return NotFound($"can't found the command id: {id}");
             }
             return Ok(commandItem);
         }
