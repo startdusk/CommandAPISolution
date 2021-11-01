@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-
 using CommandAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 
 namespace CommandAPI
 {
@@ -29,7 +29,15 @@ namespace CommandAPI
             // versions of .NET Core Framework, you would have specified
             // services.AddMVC. Don’t worry; we cover what the Model–View–
             // Controller (MVC) pattern is below.
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(setupAction =>
+            {
+                // 设置返回的json key格式为小写字符加下划线，需要安装Microsoft.AspNetCore.Mvc.NewtonsoftJson
+                setupAction.SerializerSettings.ContractResolver =
+                new DefaultContractResolver
+                {
+                    NamingStrategy = new SnakeCaseNamingStrategy()
+                };
+            });
 
             // 添加要注入容器的服务，这里使用Scoped，是指每来一个request就创造一个新的对象
             // services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
