@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using CommandAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
+using Npgsql;
 
 namespace CommandAPI
 {
@@ -21,9 +22,14 @@ namespace CommandAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var builder = new NpgsqlConnectionStringBuilder();
+            builder.ConnectionString = Configuration.GetConnectionString("PostgreSqlConnection");
+            builder.Username = Configuration["UserID"];
+            builder.Password = Configuration["Password"];
             // 添加注入容器的数据库上下文对象
-            services.AddDbContext<CommandContext>(option => option.UseNpgsql(
-                Configuration.GetConnectionString("PostgreSqlConnection")));
+            services.AddDbContext<CommandContext>(option =>
+                option.UseNpgsql(builder.ConnectionString));
+
             // Registers services to enable the use of “Controllers” throughout
             // our application. As mentioned in the info box, in previous
             // versions of .NET Core Framework, you would have specified
