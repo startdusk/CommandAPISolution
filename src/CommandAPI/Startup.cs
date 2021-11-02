@@ -7,6 +7,8 @@ using CommandAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Npgsql;
+using AutoMapper;
+using System;
 
 namespace CommandAPI
 {
@@ -44,6 +46,9 @@ namespace CommandAPI
                     NamingStrategy = new SnakeCaseNamingStrategy()
                 };
             });
+
+            // 添加 扫描转换Dto的映射光系(扫描项目目录中继承了AutoMapper.Profile的类)
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // 添加要注入容器的服务，这里使用Scoped，是指每来一个request就创造一个新的对象
             // services.AddScoped<ICommandAPIRepo, MockCommandAPIRepo>();
