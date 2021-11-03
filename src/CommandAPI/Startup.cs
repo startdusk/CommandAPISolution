@@ -28,6 +28,7 @@ namespace CommandAPI
             builder.ConnectionString = Configuration.GetConnectionString("PostgreSqlConnection");
             builder.Username = Configuration["UserID"];
             builder.Password = Configuration["Password"];
+
             // 添加注入容器的数据库上下文对象
             services.AddDbContext<CommandContext>(option =>
                 option.UseNpgsql(builder.ConnectionString));
