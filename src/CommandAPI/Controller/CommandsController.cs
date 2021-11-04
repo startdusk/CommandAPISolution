@@ -68,7 +68,7 @@ namespace CommandAPI.Controller
 
         // patch data
         // [
-        //      { "op": "replace", "patch": "/how_to", "value", "Run a .NET Core 5 App" }
+        //      { "op": "replace", "patch": "/how_to", "value": "Run a .NET Core 5 App" }
         // ]
         [HttpPatch("{id}")]
         public ActionResult PartialCommandUpdate(int id, JsonPatchDocument<CommandUpdateDto> patchDoc)
