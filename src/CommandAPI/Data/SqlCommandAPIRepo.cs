@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CommandAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CommandAPI.Data
 {
@@ -14,14 +16,14 @@ namespace CommandAPI.Data
             _context = context;
         }
 
-        public void CreateCommand(Command cmd)
+        public async Task CreateCommand(Command cmd)
         {
             if (cmd == null)
             {
                 throw new ArgumentNullException(nameof(cmd));
             }
 
-            _context.CommandItems.Add(cmd);
+            await _context.CommandItems.AddAsync(cmd);
         }
 
         public void DeleteCommand(Command cmd)
@@ -34,19 +36,19 @@ namespace CommandAPI.Data
             _context.CommandItems.Remove(cmd);
         }
 
-        public IEnumerable<Command> GetAllCommands()
+        public async Task<IEnumerable<Command>> GetAllCommands()
         {
-            return _context.CommandItems.ToList();
+            return await _context.CommandItems.ToListAsync();
         }
 
-        public Command GetCommandById(int id)
+        public async Task<Command> GetCommandById(int id)
         {
-            return _context.CommandItems.FirstOrDefault(p => p.Id == id);
+            return await _context.CommandItems.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public bool SaveChanges()
+        public async Task<bool> SaveChangesAsync()
         {
-            return (_context.SaveChanges() > 0);
+            return (await _context.SaveChangesAsync() > 0);
         }
 
         public void UpdateCommand(Command cmd)

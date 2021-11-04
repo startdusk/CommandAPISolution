@@ -1,17 +1,18 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommandAPI.Models;
 
 namespace CommandAPI.Data
 {
     public interface ICommandAPIRepo
     {
-        bool SaveChanges();
+        Task<bool> SaveChangesAsync();
 
-        IEnumerable<Command> GetAllCommands();
+        Task<IEnumerable<Command>> GetAllCommands();
 
-        Command GetCommandById(int id);
+        Task<Command> GetCommandById(int id);
 
-        void CreateCommand(Command cmd);
+        Task CreateCommand(Command cmd);
 
         void UpdateCommand(Command cmd);
 
