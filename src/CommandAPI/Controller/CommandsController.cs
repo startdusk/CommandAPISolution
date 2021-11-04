@@ -29,7 +29,7 @@ namespace CommandAPI.Controller
         }
 
         [HttpGet("{id}", Name = "GetCommandById")]
-        public ActionResult<CommandReadDto> GetCommandById(int id)
+        public ActionResult<CommandReadDto> GetCommandById([FromRoute] int id)
         {
             var commandItem = _repository.GetCommandById(id);
             if (commandItem == null)
@@ -40,7 +40,7 @@ namespace CommandAPI.Controller
         }
 
         [HttpPost]
-        public ActionResult<CommandReadDto> CreateCommand(CommandCreateDto commandCreateDto)
+        public ActionResult<CommandReadDto> CreateCommand([FromBody] CommandCreateDto commandCreateDto)
         {
             var commandModel = _mapper.Map<Command>(commandCreateDto);
             _repository.CreateCommand(commandModel);
@@ -51,7 +51,7 @@ namespace CommandAPI.Controller
         }
 
         [HttpPut("{id}")]
-        public ActionResult UpdateCommand(int id, CommandUpdateDto commandUpdateDto)
+        public ActionResult UpdateCommand([FromRoute] int id, [FromBody] CommandUpdateDto commandUpdateDto)
         {
             var commandModelFromRepo = _repository.GetCommandById(id);
             if (commandModelFromRepo == null)
@@ -70,8 +70,9 @@ namespace CommandAPI.Controller
         // [
         //      { "op": "replace", "patch": "/how_to", "value": "Run a .NET Core 5 App" }
         // ]
+        // 如何在ASP.NET Core中使用JSON Patch https://www.cnblogs.com/lwqlun/p/10433615.html
         [HttpPatch("{id}")]
-        public ActionResult PartialCommandUpdate(int id, JsonPatchDocument<CommandUpdateDto> patchDoc)
+        public ActionResult PartialCommandUpdate([FromRoute] int id, [FromBody] JsonPatchDocument<CommandUpdateDto> patchDoc)
         {
             var commandModelFromRepo = _repository.GetCommandById(id);
             if (commandModelFromRepo == null)
@@ -89,6 +90,21 @@ namespace CommandAPI.Controller
             _mapper.Map(commandToPatch, commandModelFromRepo);
             _repository.UpdateCommand(commandModelFromRepo);
             _repository.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteCommand([FromRoute] int id)
+        {
+            var commandModelFromRepo = _repository.GetCommandById(id);
+            if (commandModelFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _repository.DeleteCommand(commandModelFromRepo);
+            _repository.SaveChanges();
+
             return NoContent();
         }
     }

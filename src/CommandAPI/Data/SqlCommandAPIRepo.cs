@@ -26,6 +26,11 @@ namespace CommandAPI.Data
 
         public void DeleteCommand(Command cmd)
         {
+            if (cmd == null)
+            {
+                throw new ArgumentNullException(nameof(cmd));
+            }
+
             _context.CommandItems.Remove(cmd);
         }
 
