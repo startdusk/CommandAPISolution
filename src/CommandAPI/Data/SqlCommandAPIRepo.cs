@@ -36,6 +36,11 @@ namespace CommandAPI.Data
             _context.CommandItems.Remove(cmd);
         }
 
+        public void DeleteCommands(IEnumerable<Command> cmds)
+        {
+            _context.CommandItems.RemoveRange(cmds);
+        }
+
         public async Task<IEnumerable<Command>> GetAllCommands()
         {
             return await _context.CommandItems.ToListAsync();
@@ -44,6 +49,11 @@ namespace CommandAPI.Data
         public async Task<Command> GetCommandById(int id)
         {
             return await _context.CommandItems.FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<IEnumerable<Command>> GetCommandByIds(IEnumerable<int> ids)
+        {
+            return await _context.CommandItems.Where(c => ids.Contains(c.Id)).ToListAsync();
         }
 
         public async Task<bool> SaveChangesAsync()

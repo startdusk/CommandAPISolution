@@ -12,10 +12,13 @@ namespace CommandAPI.Data
 
         Task<Command> GetCommandById(int id);
 
+        Task<IEnumerable<Command>> GetCommandByIds(IEnumerable<int> ids);
+
         Task CreateCommand(Command cmd);
 
         void UpdateCommand(Command cmd);
 
         void DeleteCommand(Command cmd);
+        void DeleteCommands(IEnumerable<Command> cmds);
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Threading.Tasks;
+using CommandAPI.Helper;
 
 namespace CommandAPI.Controller
 {
@@ -104,6 +105,24 @@ namespace CommandAPI.Controller
             }
 
             _repository.DeleteCommand(commandModelFromRepo);
+            await _repository.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // 批量删除数据
+        // url 示例 http://localhost:5000/api/commands/(1,2,3,4)
+        [HttpDelete("({ids})")]
+        public async Task<ActionResult> DeleteCommandByIds(
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))][FromRoute] IEnumerable<int> ids)
+        {
+            if (ids == null)
+            {
+                return BadRequest();
+            }
+
+            var commandModelsFromRepo = await _repository.GetCommandByIds(ids);
+            _repository.DeleteCommands(commandModelsFromRepo);
             await _repository.SaveChangesAsync();
 
             return NoContent();
