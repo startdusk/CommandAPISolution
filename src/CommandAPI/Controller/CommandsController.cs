@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Threading.Tasks;
 using CommandAPI.Helper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommandAPI.Controller
 {
@@ -42,6 +43,7 @@ namespace CommandAPI.Controller
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<CommandReadDto>> CreateCommand([FromBody] CommandCreateDto commandCreateDto)
         {
             var commandModel = _mapper.Map<Command>(commandCreateDto);

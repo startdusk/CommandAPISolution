@@ -9,6 +9,9 @@ using Newtonsoft.Json.Serialization;
 using Npgsql;
 using AutoMapper;
 using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CommandAPI
 {
@@ -24,6 +27,25 @@ namespace CommandAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // 添加认证服务
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                var secretByte = Encoding.UTF8.GetBytes(Configuration["Authentication:SecretKey"]);
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = Configuration["Authentication:Issuer"],
+
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["Authentication:Audience"],
+
+                    ValidateLifetime = true,
+
+                    IssuerSigningKey = new SymmetricSecurityKey(secretByte)
+                };
+            });
+
             var builder = new NpgsqlConnectionStringBuilder();
             builder.ConnectionString = Configuration.GetConnectionString("PostgreSqlConnection");
             builder.Username = Configuration["UserID"];
@@ -64,7 +86,13 @@ namespace CommandAPI
                 app.UseDeveloperExceptionPage();
             }
 
+            // 你在哪里
             app.UseRouting();
+            // 你是谁
+            app.UseAuthentication();
+            // 你可以干啥(有啥权限)
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 // endpoints.MapGet("/", async context =>
