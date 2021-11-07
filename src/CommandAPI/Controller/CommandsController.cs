@@ -44,6 +44,7 @@ namespace CommandAPI.Controller
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(Roles = "Admin")] // 设置需要Admin用户的角色才能添加
         public async Task<ActionResult<CommandReadDto>> CreateCommand([FromBody] CommandCreateDto commandCreateDto)
         {
             var commandModel = _mapper.Map<Command>(commandCreateDto);

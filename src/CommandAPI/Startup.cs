@@ -7,11 +7,13 @@ using CommandAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Npgsql;
-using AutoMapper;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity;
+using EFCore.NamingConventions;
+using CommandAPI.Models;
 
 namespace CommandAPI
 {
@@ -27,6 +29,8 @@ namespace CommandAPI
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<CommandContext>();
             // 添加认证服务
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -41,7 +45,6 @@ namespace CommandAPI
                     ValidAudience = Configuration["Authentication:Audience"],
 
                     ValidateLifetime = true,
-
                     IssuerSigningKey = new SymmetricSecurityKey(secretByte)
                 };
             });
@@ -52,8 +55,12 @@ namespace CommandAPI
             builder.Password = Configuration["Password"];
 
             // 添加注入容器的数据库上下文对象
+            // TODO: 2021/11/7 有BUG
+            // 解决方法：https://github.com/efcore/EFCore.NamingConventions/issues/1#issuecomment-743245148
             services.AddDbContext<CommandContext>(option =>
-                option.UseNpgsql(builder.ConnectionString));
+                // 并设置snakecase格式的sql字段
+                option.UseNpgsql(builder.ConnectionString)
+                .UseSnakeCaseNamingConvention());
 
             // Registers services to enable the use of “Controllers” throughout
             // our application. As mentioned in the info box, in previous
