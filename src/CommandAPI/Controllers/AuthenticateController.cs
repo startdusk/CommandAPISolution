@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using CommandAPI.Models;
 
-namespace CommandAPI.Controller
+namespace CommandAPI.Controllers
 {
     [Route("auth")]
     [ApiController]

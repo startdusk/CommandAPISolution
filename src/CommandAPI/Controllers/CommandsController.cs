@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using CommandAPI.Helper;
 using Microsoft.AspNetCore.Authorization;
 
-namespace CommandAPI.Controller
+namespace CommandAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
